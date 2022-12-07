@@ -25,6 +25,7 @@ hard,h
 ## TODO
 - optimiztion for speed
 - user login to skip submitted problems
+- [Hyperlinks in terminal](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda)
 
 ## Example
 ```
