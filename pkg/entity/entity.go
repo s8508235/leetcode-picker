@@ -24,13 +24,9 @@ const (
 const (
 	// Negative means do not care
 	Negative Rating = iota
-	// MostlyNegative ...
 	MostlyNegative
-	// Mixed ...
 	Mixed
-	// MostlyPositive ...
 	MostlyPositive
-	// Positive ...
 	Positive
 	OverwhelminglyPositive
 )
