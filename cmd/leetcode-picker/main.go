@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	leetcodeAPIURL        = "https://leetcode.com/api/problems/all/"
+	leetcodeApiUrl        = "https://leetcode.com/api/problems/all/"
 	leetcodeProblemPrefix = "https://leetcode.com/problems"
 	leetcodeGraphqlPrefix = "https://leetcode.com/graphql/"
 )
@@ -29,14 +29,9 @@ var (
 	rating         int
 )
 
-func init() {
-	flag.StringVarP(&level, "level", "l", "all", "problem level for all, easy, medium, hard")
-	flag.IntVarP(&rating, "rating", "r", 0, "problem rating")
-}
-
 func setup() error {
 	flag.Parse()
-	resp, err := http.Get(leetcodeAPIURL)
+	resp, err := http.Get(leetcodeApiUrl)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -51,6 +46,8 @@ func setup() error {
 }
 
 func main() {
+	flag.StringVarP(&level, "level", "l", "all", "problem level for all, easy, medium, normal, hard")
+	flag.IntVarP(&rating, "rating", "r", 0, "problem rating")
 	// st := time.Now()
 	if err := setup(); err != nil {
 		fmt.Println("Setup error", err)
@@ -101,8 +98,14 @@ pick:
 				fmt.Println(err)
 				return
 			}
+		case "n", "normal":
+			problem, err = getProblem(append(mediumProblems, hardProblems...))
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 		default:
-			fmt.Println("Wrong flag! Please input one of all/easy/medium/hard")
+			fmt.Println("Wrong flag! Please input one of all/easy/medium/hard/normal")
 		}
 		// fmt.Println("time elapsed pick a problem", float64(time.Since(st).Milliseconds())/1000.0, "secs")
 		if entity.Rating(rating) == entity.Negative {

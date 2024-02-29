@@ -20,6 +20,7 @@ go install github.com/s8508235/leetcode-picker/cmd/leetcode-picker@latest
 all,a
 easy,e
 medium,m
+normal,n
 hard,h
 ```
 ## TODO
