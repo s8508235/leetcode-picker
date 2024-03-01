@@ -106,6 +106,7 @@ pick:
 			}
 		default:
 			fmt.Println("Wrong flag! Please input one of all/easy/medium/hard/normal")
+			return
 		}
 		// fmt.Println("time elapsed pick a problem", float64(time.Since(st).Milliseconds())/1000.0, "secs")
 		if entity.Rating(rating) == entity.Negative {
