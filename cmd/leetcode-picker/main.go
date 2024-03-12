@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
+	"os"
+	"time"
 
+	"github.com/chromedp/chromedp"
 	"github.com/machinebox/graphql"
 	"github.com/s8508235/leetcode-picker/pkg/entity"
 	"github.com/s8508235/leetcode-picker/pkg/util"
@@ -31,13 +33,56 @@ var (
 
 func setup() error {
 	flag.Parse()
-	resp, err := http.Get(leetcodeApiUrl)
+	if _, err := os.Stat("./problems.json"); errors.Is(err, os.ErrNotExist) {
+		opts := append(chromedp.DefaultExecAllocatorOptions[:],
+			chromedp.UserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3239.108 Safari/537.36"),
+		)
+		ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
+		defer cancel()
+		// use chromedp.WithDebugf to log the CDP messages
+		// ctx, cancel = chromedp.NewContext(ctx, chromedp.WithDebugf(log.Printf))
+		ctx, cancel = chromedp.NewContext(ctx)
+		defer cancel()
+		// create a timeout
+		ctx, cancel = context.WithTimeout(ctx, 15*time.Second)
+		defer cancel()
+
+		// navigate to a page, wait for an element, click
+		var value string
+		// var str string
+		err := chromedp.Run(ctx,
+			chromedp.Navigate(leetcodeApiUrl),
+			chromedp.Sleep(500*time.Millisecond),
+			// chromedp.ActionFunc(func(ctx context.Context) error {
+			// 	node, err := dom.GetDocument().Do(ctx)
+			// 	if err != nil {
+			// 		return err
+			// 	}
+			// 	str, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			// 	return err
+			// }),
+			// wait for body element is visible (ie, page is loaded)
+			chromedp.Text(`body`, &value, chromedp.NodeVisible),
+		)
+		// os.WriteFile("chromedp.html", []byte(str), 0644)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+		err = json.Unmarshal([]byte(value), &data)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+		return nil
+	}
+	// work around forbidden issue
+	problemFile, err := os.OpenFile("./problems.json", os.O_RDONLY, 0400)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	defer resp.Body.Close()
-	err = json.NewDecoder(resp.Body).Decode(&data)
+	err = json.NewDecoder(problemFile).Decode(&data)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -106,6 +151,7 @@ pick:
 			}
 		default:
 			fmt.Println("Wrong flag! Please input one of all/easy/medium/hard/normal")
+			return
 		}
 		// fmt.Println("time elapsed pick a problem", float64(time.Since(st).Milliseconds())/1000.0, "secs")
 		if entity.Rating(rating) == entity.Negative {

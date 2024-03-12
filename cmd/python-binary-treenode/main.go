@@ -82,7 +82,7 @@ func traverse(stringBuilder *strings.Builder, node *treeNode) {
 		stringBuilder.WriteRune(')')
 		return
 	}
-	// if node.Left != nil {1
+	// if node.Left != nil {
 	traverse(stringBuilder, node.Left)
 	if node.Right != nil {
 		// stringBuilder.WriteString("with right" + strconv.Itoa(node.Right.Val))
