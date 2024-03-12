@@ -36,6 +36,9 @@ func setup() error {
 	if _, err := os.Stat("./problems.json"); errors.Is(err, os.ErrNotExist) {
 		opts := append(chromedp.DefaultExecAllocatorOptions[:],
 			chromedp.UserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3239.108 Safari/537.36"),
+			// windows paths
+			chromedp.ExecPath("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"),
+			chromedp.ExecPath("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"),
 		)
 		ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 		defer cancel()
