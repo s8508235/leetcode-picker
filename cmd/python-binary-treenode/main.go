@@ -116,7 +116,7 @@ func main() {
 		return
 	}
 	pythonArrayStr = pythonArrayStr[1 : len(pythonArrayStr)-1]
-	re, err := regexp.Compile(`^(\d+,|null,)*\d$`)
+	re, err := regexp.Compile(`^(-?\d+,|null,)*(-?\d+|null)$`)
 	if err != nil {
 		logger.Error("compile regexp failed", slog.Any("err", err))
 		return
