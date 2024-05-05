@@ -14,23 +14,21 @@ func TestBstFromPreOrder(t *testing.T) {
 		expectStr string
 		expectErr error
 	}{
-		{[]string{"1", "null", "2"}, "TreeNode(1,None,TreeNode(2))", nil},
-		{[]string{"1"}, "TreeNode(1)", nil},
+		{[]string{"1", "2", "3"}, "ListNode(1,ListNode(2,ListNode(3)))", nil},
+		{[]string{"1"}, "ListNode(1)", nil},
 		{[]string{"5", "9", "1", "3", "6", "7"},
-			"TreeNode(5,TreeNode(9,TreeNode(3),TreeNode(6)),TreeNode(1,TreeNode(7)))", nil},
-		{[]string{"1", "10", "4", "3", "null", "7"},
-			"TreeNode(1,TreeNode(10,TreeNode(3)),TreeNode(4,TreeNode(7)))", nil},
+			"ListNode(5,ListNode(9,ListNode(1,ListNode(3,ListNode(6,ListNode(7))))))", nil},
 	}
 	sb := new(strings.Builder)
 	for _, testCase := range testCases {
 		sb.Reset()
-		head, err := bstFromPreOrder(logger, testCase.numList)
+		head, err := listNodeFromArray(logger, testCase.numList)
 		if testCase.expectErr != err {
 			t.Logf("expect error %v but with %v", testCase.expectErr, err)
 			t.Fail()
 			return
 		}
-		traverse(sb, head)
+		iterate(sb, head)
 		if sb.String() != testCase.expectStr {
 			t.Logf("expect output %s but with %s", testCase.expectStr, sb.String())
 			t.Fail()

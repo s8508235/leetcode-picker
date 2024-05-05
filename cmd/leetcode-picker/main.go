@@ -39,6 +39,9 @@ func setup() error {
 			// windows paths
 			chromedp.ExecPath("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"),
 			chromedp.ExecPath("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"),
+			// linux paths
+			chromedp.ExecPath("google-chrome"),
+			chromedp.ExecPath("edge"),
 		)
 		ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 		defer cancel()
