@@ -103,5 +103,5 @@ func main() {
 	} else {
 		iterate(sb, head)
 	}
-	fmt.Println(sb.String()[1:])
+	fmt.Println(sb.String())
 }
