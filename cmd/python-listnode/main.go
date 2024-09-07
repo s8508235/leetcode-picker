@@ -24,7 +24,7 @@ func listNodeFromArray(logger *slog.Logger, numList []string) (*listNode, error)
 	if numList[0] == "null" {
 		return nil, nil
 	}
-	value, parseErr := strconv.Atoi(numList[0])
+	value, parseErr := strconv.Atoi(strings.TrimSpace(numList[0]))
 	if parseErr != nil {
 		logger.Error("parse tree node value failed",
 			slog.String("value", numList[0]), slog.Any("err", parseErr))
@@ -32,7 +32,7 @@ func listNodeFromArray(logger *slog.Logger, numList []string) (*listNode, error)
 	}
 	current := root
 	for _, val := range numList[1:] {
-		value, parseErr := strconv.Atoi(val)
+		value, parseErr := strconv.Atoi(strings.TrimSpace(val))
 		if parseErr != nil {
 			logger.Error("parse tree node value failed",
 				slog.String("value", val),
@@ -83,7 +83,7 @@ func main() {
 		return
 	}
 	pythonArrayStr = pythonArrayStr[1 : len(pythonArrayStr)-1]
-	re, err := regexp.Compile(`^(-?\d+,|null,)*(-?\d+|null)$`)
+	re, err := regexp.Compile(`^(\s*-?\d+,|\s*null,)*(\s*-?\d+|\s*null)$`)
 	if err != nil {
 		logger.Error("compile regexp failed", slog.Any("err", err))
 		return

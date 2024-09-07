@@ -23,10 +23,10 @@ const noneStr = "None"
 
 func bstFromPreOrder(logger *slog.Logger, numList []string) (*treeNode, error) {
 	root := new(treeNode)
-	if numList[0] == "null" {
+	if strings.TrimSpace(numList[0]) == "null" {
 		return nil, nil
 	}
-	value, parseErr := strconv.Atoi(numList[0])
+	value, parseErr := strconv.Atoi(strings.TrimSpace(numList[0]))
 	if parseErr != nil {
 		logger.Error("parse tree node value failed",
 			slog.String("value", numList[0]), slog.Any("err", parseErr))
@@ -35,6 +35,7 @@ func bstFromPreOrder(logger *slog.Logger, numList []string) (*treeNode, error) {
 	root.Val = value
 	stack := []*treeNode{root}
 	for index, val := range numList[1:] {
+		val := strings.TrimSpace(val)
 		if val == "null" {
 			// left node
 			if index%2 == 0 {
@@ -60,10 +61,6 @@ func bstFromPreOrder(logger *slog.Logger, numList []string) (*treeNode, error) {
 			stack = stack[1:]
 			stack = append(stack, last.Right)
 		}
-		// for _, s := range stack {
-		// 	fmt.Printf("%+v, ", s.Val)
-		// }
-		// fmt.Printf("\n")
 
 	}
 	return root, nil
@@ -118,7 +115,7 @@ func main() {
 		return
 	}
 	pythonArrayStr = pythonArrayStr[1 : len(pythonArrayStr)-1]
-	re, err := regexp.Compile(`^(-?\d+,|null,)*(-?\d+|null)$`)
+	re, err := regexp.Compile(`^(\s*-?\d+,|\s*null,)*(\s*-?\d+|\s*null)$`)
 	if err != nil {
 		logger.Error("compile regexp failed", slog.Any("err", err))
 		return
